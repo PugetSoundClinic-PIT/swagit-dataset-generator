@@ -1,0 +1,7 @@
+swagit_dataset_generator
+========================
+
+.. toctree::
+   :maxdepth: 4
+
+   swagit_dataset_generator

@@ -1,0 +1,29 @@
+swagit\_dataset\_generator package
+==================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   swagit_dataset_generator.bin
+
+Submodules
+----------
+
+swagit\_dataset\_generator.example module
+-----------------------------------------
+
+.. automodule:: swagit_dataset_generator.example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: swagit_dataset_generator
+   :members:
+   :undoc-members:
+   :show-inheritance:
