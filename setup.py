@@ -53,7 +53,13 @@ dev_requirements = [
     "wheel>=0.34.2",
 ]
 
-requirements = []
+requirements = [
+    "dataclasses_json~=0.5",
+    "requests~=2.28",
+    "selenium~=4.3",
+    "tqdm~=4.64",
+    "webdriver_manager~=3.8",
+]
 
 extra_requirements = {
     "setup": setup_requirements,
