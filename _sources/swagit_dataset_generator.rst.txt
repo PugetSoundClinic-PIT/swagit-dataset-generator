@@ -12,10 +12,10 @@ Subpackages
 Submodules
 ----------
 
-swagit\_dataset\_generator.example module
------------------------------------------
+swagit\_dataset\_generator.swagit\_scraper module
+-------------------------------------------------
 
-.. automodule:: swagit_dataset_generator.example
+.. automodule:: swagit_dataset_generator.swagit_scraper
    :members:
    :undoc-members:
    :show-inheritance:
