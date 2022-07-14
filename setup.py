@@ -54,11 +54,10 @@ dev_requirements = [
 ]
 
 requirements = [
+    "beautifulsoup4~=4.11",
     "dataclasses_json~=0.5",
     "requests~=2.28",
-    "selenium~=4.3",
     "tqdm~=4.64",
-    "webdriver_manager~=3.8",
 ]
 
 extra_requirements = {

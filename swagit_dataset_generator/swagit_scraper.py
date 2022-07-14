@@ -11,14 +11,9 @@ from time import sleep
 from typing import Optional, Union
 
 import requests
+from bs4 import BeautifulSoup
 from dataclasses_json import DataClassJsonMixin
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
 from tqdm.contrib.concurrent import thread_map
-from webdriver_manager.firefox import GeckoDriverManager
 
 ###############################################################################
 
@@ -79,13 +74,9 @@ class SwagitScraper:
         # Store general state
         self.current_index = start_index
 
-        # Install geckodriver
-        self.gecko_service = Service(GeckoDriverManager().install())
-
     @staticmethod
     def _process_page(
         index: int,
-        gecko_service: Service,
         trial: int = 0,
         max_trials: int = 3,
     ) -> Optional[SwagitPageParse]:
@@ -109,27 +100,9 @@ class SwagitScraper:
                 # Open log file and store current index
                 raise e
 
-        # Full page load from selenium
-        opts = Options()
-        opts.add_argument("--headless")
-        driver = webdriver.Firefox(
-            options=opts,
-            service=gecko_service,
-        )
-        driver.get(url)
-        WebDriverWait(driver, 10)
-
-        # Check for video error
-        div_is_error_elements = driver.find_elements(By.CLASS_NAME, "is-error")
-        # Found page with bad video, ignore and move on
-        if len(div_is_error_elements) > 0:
-            return None
-
         # Parse title
-        match_or_none = re.match(SwagitScraper.TITLE_RE_COMPILED, driver.title)
-
-        # Close the driver
-        driver.close()
+        soup = BeautifulSoup(response.text, "html.parser")
+        match_or_none = re.match(SwagitScraper.TITLE_RE_COMPILED, soup.title.string)
 
         # Check content
         if match_or_none is None:
