@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/evamaxfield/swagit-dataset-generator/workflows/Build/badge.svg)](https://github.com/evamaxfield/swagit-dataset-generator/actions)
 [![Documentation](https://github.com/evamaxfield/swagit-dataset-generator/workflows/Documentation/badge.svg)](https://swagit-dataset-generator.github.io/swagit-dataset-generator)
 
-A small package to generate a dataset of municipal council meetings fr metadata from Swagit .
+A small package to generate a dataset of municipal council meeting metadata from Swagit.
 
 ---
 

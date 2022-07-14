@@ -5,7 +5,7 @@ default_context:
     project_name: "Swagit Dataset Generator"
     project_slug: "swagit-dataset-generator"
     python_slug: "swagit_dataset_generator"
-    project_short_description: "A small package to generate a dataset of municipal council meetings fr metadata from Swagit ."
+    project_short_description: "A small package to generate a dataset of municipal council meeting metadata from Swagit."
     pypi_username: "evamaxfield"
     version: "0.0.0"
     license: "MIT License"
