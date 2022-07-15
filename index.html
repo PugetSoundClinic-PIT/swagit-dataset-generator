@@ -162,10 +162,7 @@
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">Package modules</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="swagit_dataset_generator.html">swagit_dataset_generator package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="swagit_dataset_generator.bin.html">swagit_dataset_generator.bin package</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="swagit_dataset_generator.html">swagit_dataset_generator package</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
@@ -213,52 +210,6 @@
 <a class="reference external image-reference" href="https://swagit-dataset-generator.github.io/swagit-dataset-generator"><img alt="Documentation" src="https://github.com/evamaxfield/swagit-dataset-generator/workflows/Documentation/badge.svg" /></a>
 <p>A small package to generate a dataset of municipal council meeting metadata from Swagit.</p>
 <hr class="docutils" />
-<section id="setting-up-the-repo">
-<h2>Setting Up the Repo<a class="headerlink" href="#setting-up-the-repo" title="Permalink to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p>Turn your project into a GitHub repository:</p>
-<ul class="simple">
-<li><p>Make an account on <a class="reference external" href="https://github.com">github.com</a></p></li>
-<li><p>Go to <a class="reference external" href="https://github.com/new">make a new repository</a></p></li>
-<li><p><em>Recommendations:</em></p>
-<ul>
-<li><dl class="simple">
-<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>It is strongly recommended to make the repository name the same as the Python</dt><dd><p>package name*</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><em>A lot of the following optional steps are *free</em> if the repository is Public,</dt><dd><p>plus open source is cool*</p>
-</dd>
-</dl>
-</li>
-</ul>
-</li>
-<li><dl class="simple">
-<dt>After a GitHub repo has been created, run the commands listed under:</dt><dd><p>“…or push an existing repository from the command line”</p>
-</dd>
-</dl>
-</li>
-</ul>
-</li>
-<li><p>Ensure that you have set GitHub pages to build the <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch by selecting the
-<code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch in the dropdown in the “GitHub Pages” section of the
-repository settings.
-(<a class="reference external" href="https://github.com/evamaxfield/swagit-dataset-generator/settings">Repo Settings</a>)</p></li>
-<li><p>Register your project with PyPI:</p>
-<ul class="simple">
-<li><p>Make an account on <a class="reference external" href="https://pypi.org">pypi.org</a></p></li>
-<li><p>Go to your GitHub repository’s settings and under the
-<a class="reference external" href="https://github.com/evamaxfield/swagit-dataset-generator/settings/secrets/actions">Secrets tab</a>,
-add a secret called <code class="docutils literal notranslate"><span class="pre">PYPI_TOKEN</span></code> with your password for your PyPI account.
-Don’t worry, no one will see this password because it will be encrypted.</p></li>
-<li><p>Next time you push to the branch <code class="docutils literal notranslate"><span class="pre">main</span></code> after using <code class="docutils literal notranslate"><span class="pre">bump2version</span></code>, GitHub
-actions will build and deploy your Python package to PyPI.</p></li>
-</ul>
-</li>
-</ol>
-<p>You can delete this entire “Setting up the Repo” section once done!</p>
-</section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p><strong>Stable Release:</strong> <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">swagit-dataset-generator</span></code><span class="raw-html-m2r"><br></span>
@@ -266,9 +217,14 @@ actions will build and deploy your Python package to PyPI.</p></li>
 </section>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swagit_dataset_generator</span> <span class="kn">import</span> <span class="n">example</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swagit_dataset_generator</span> <span class="kn">import</span> <span class="n">SwagitScraper</span>
+<span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">example</span><span class="o">.</span><span class="n">str_len</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">))</span>  <span class="c1"># prints 5</span>
+<span class="n">scraper</span> <span class="o">=</span> <span class="n">SwagitScraper</span><span class="p">(</span><span class="n">start_index</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">end_index</span><span class="o">=</span><span class="mi">10100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">chunk_dir</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chunk_dir</span><span class="si">}</span><span class="s2">/*&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results_df</span><span class="o">.</span><span class="n">meeting_body</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
