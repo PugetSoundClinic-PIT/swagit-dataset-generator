@@ -87,10 +87,13 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
-    description="A small package to generate a dataset of municipal council meeting metadata from Swagit.",
+    description=(
+        "A small package to generate a dataset of municipal council "
+        "meeting metadata from Swagit."
+    ),
     entry_points={
         "console_scripts": [
-            ("calc-string-length=swagit_dataset_generator.bin.str_len:main"),
+            (),
         ],
     },
     install_requires=requirements,
