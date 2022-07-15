@@ -266,9 +266,9 @@
         <span class="n">end_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200_000</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
         <span class="n">storage_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_STORAGE_DIR</span><span class="p">,</span>
-        <span class="n">workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
         <span class="n">max_trials_per_page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="n">time_between_batches</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">time_per_request</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Store params</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_index</span> <span class="o">=</span> <span class="n">start_index</span>
@@ -277,7 +277,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">storage_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">storage_dir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">workers</span> <span class="o">=</span> <span class="n">workers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_trials_per_page</span> <span class="o">=</span> <span class="n">max_trials_per_page</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_between_batches</span> <span class="o">=</span> <span class="n">time_between_batches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_per_request</span> <span class="o">=</span> <span class="n">time_per_request</span>
 
         <span class="c1"># Store general state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="n">start_index</span>
@@ -290,6 +290,7 @@
         <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">trial</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">max_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">time_per_request</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SwagitPageParse</span><span class="p">]:</span>
         <span class="c1"># Get the page</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">SwagitScraper</span><span class="o">.</span><span class="n">BASE_URI_PATTERN</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
@@ -330,6 +331,9 @@
         <span class="n">municipality</span> <span class="o">=</span> <span class="n">match_or_none</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y&quot;</span><span class="p">)</span>
 
+        <span class="c1"># Wait to limit ourselves</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="n">time_per_request</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">SwagitPageParse</span><span class="p">(</span>
             <span class="n">_i</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
             <span class="n">municipality</span><span class="o">=</span><span class="n">municipality</span><span class="p">,</span>
@@ -346,12 +350,14 @@
         <span class="n">process_func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_process_page</span><span class="p">,</span>
             <span class="n">max_trials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_trials_per_page</span><span class="p">,</span>
+            <span class="n">time_per_request</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_per_request</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">batches</span><span class="p">),</span> <span class="s2">&quot;Batches&quot;</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">results</span> <span class="o">=</span> <span class="n">thread_map</span><span class="p">(</span>
                     <span class="n">process_func</span><span class="p">,</span>
                     <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">),</span>
+                    <span class="n">max_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">,</span>
                     <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;This Batch&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -365,12 +371,6 @@
             <span class="n">results_df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">result_store_path</span><span class="p">)</span>
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stored chunk to: &#39;</span><span class="si">{</span><span class="n">result_store_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
-
-            <span class="c1"># Wait</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Sleeping for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_between_batches</span><span class="si">}</span><span class="s2"> seconds before next batch...&quot;</span>
-            <span class="p">)</span>
-            <span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_between_batches</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_dir</span></div></div>
 </pre></div>
