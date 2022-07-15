@@ -160,7 +160,9 @@ class SwagitScraper:
                 if indices:
                     results = thread_map(
                         process_func,
-                        indices,
+                        indices[
+                            self.current_index : self.current_index + self.batch_size
+                        ],
                         max_workers=self.workers,
                         desc="This Batch",
                     )
