@@ -48,7 +48,9 @@ while True:
     print(f"Municipality counts:\n{new_counts}")
     if previous_counts is not None:
         print("")
-        diff_counts = new_counts.sub(previous_counts, fill_value=0)
+        diff_counts = new_counts.sub(previous_counts, fill_value=0).sort_values(
+            ascending=False
+        )
         print(f"Counts change:\n{diff_counts}")
     previous_counts = new_counts
 
