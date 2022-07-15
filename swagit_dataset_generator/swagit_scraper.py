@@ -65,9 +65,9 @@ class SwagitScraper:
         end_index: int = 200_000,
         batch_size: int = 100,
         storage_dir: Union[str, Path] = DEFAULT_STORAGE_DIR,
-        workers: Optional[int] = None,
+        workers: Optional[int] = 4,
         max_trials_per_page: int = 3,
-        time_between_batches: int = 100,
+        time_per_request: int = 3,
     ) -> None:
         # Store params
         self.start_index = start_index
@@ -76,7 +76,7 @@ class SwagitScraper:
         self.storage_dir = Path(storage_dir)
         self.workers = workers
         self.max_trials_per_page = max_trials_per_page
-        self.time_between_batches = time_between_batches
+        self.time_per_request = time_per_request
 
         # Store general state
         self.current_index = start_index
@@ -89,6 +89,7 @@ class SwagitScraper:
         index: int,
         trial: int = 0,
         max_trials: int = 3,
+        time_per_request: int = 3,
     ) -> Optional[SwagitPageParse]:
         # Get the page
         url = SwagitScraper.BASE_URI_PATTERN.format(index=index)
@@ -129,6 +130,9 @@ class SwagitScraper:
         municipality = match_or_none.group(9)
         dt = datetime.strptime(f"{month} {day} {year}", "%b %d %Y")
 
+        # Wait to limit ourselves
+        sleep(time_per_request)
+
         return SwagitPageParse(
             _i=index,
             municipality=municipality,
@@ -145,12 +149,14 @@ class SwagitScraper:
         process_func = partial(
             self._process_page,
             max_trials=self.max_trials_per_page,
+            time_per_request=self.time_per_request,
         )
         for _ in tqdm(range(batches), "Batches"):
             try:
                 results = thread_map(
                     process_func,
                     range(self.current_index, self.current_index + self.batch_size),
+                    max_workers=self.workers,
                     desc="This Batch",
                 )
             except Exception as e:
@@ -164,11 +170,5 @@ class SwagitScraper:
             results_df.to_parquet(result_store_path)
             log.debug(f"Stored chunk to: '{result_store_path}'")
             self.current_index += self.batch_size
-
-            # Wait
-            log.debug(
-                f"Sleeping for {self.time_between_batches} seconds before next batch..."
-            )
-            sleep(self.time_between_batches)
 
         return self.storage_dir
