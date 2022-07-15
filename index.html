@@ -221,10 +221,10 @@
 <span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
 
 <span class="n">scraper</span> <span class="o">=</span> <span class="n">SwagitScraper</span><span class="p">(</span><span class="n">start_index</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">end_index</span><span class="o">=</span><span class="mi">10100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">chunk_dir</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">chunks_dir</span> <span class="o">=</span> <span class="n">scraper</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
-<span class="n">results_df</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chunk_dir</span><span class="si">}</span><span class="s2">/*&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">results_df</span><span class="o">.</span><span class="n">meeting_body</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">())</span>
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chunks_dir</span><span class="si">}</span><span class="s2">/*&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results_df</span><span class="o">.</span><span class="n">meeting_body</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">())</span>
 </pre></div>
 </div>
 </section>
