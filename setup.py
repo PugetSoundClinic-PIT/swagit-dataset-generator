@@ -57,6 +57,7 @@ requirements = [
     "beautifulsoup4~=4.11",
     "dask>=2022.7.0",
     "dataclasses_json~=0.5",
+    "numpy~=1.23",
     "pandas~=1.4",
     "pyarrow~=8.0",
     "requests~=2.28",
@@ -93,7 +94,7 @@ setup(
     ),
     entry_points={
         "console_scripts": [
-            (),
+            ("sample-swagit-dataset=swagit_dataset_generator.bin.swagit_sampled:main"),
         ],
     },
     install_requires=requirements,

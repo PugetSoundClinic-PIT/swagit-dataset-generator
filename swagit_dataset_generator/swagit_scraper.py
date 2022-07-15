@@ -10,7 +10,7 @@ from datetime import datetime
 from functools import partial
 from pathlib import Path
 from time import sleep
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 import pandas as pd
 import requests
@@ -140,9 +140,13 @@ class SwagitScraper:
             meeting_datetime=dt,
         )
 
-    def run(self) -> Path:
+    def run(self, indices: Optional[List[int]] = None) -> Path:
         # Determine number of batches
-        total_n = self.end_index - self.start_index
+        if indices is None:
+            total_n = self.end_index - self.start_index
+        else:
+            total_n = len(indices)
+
         batches = math.ceil(total_n / self.batch_size)
 
         # Run batches
@@ -153,12 +157,20 @@ class SwagitScraper:
         )
         for _ in tqdm(range(batches), "Batches"):
             try:
-                results = thread_map(
-                    process_func,
-                    range(self.current_index, self.current_index + self.batch_size),
-                    max_workers=self.workers,
-                    desc="This Batch",
-                )
+                if indices:
+                    results = thread_map(
+                        process_func,
+                        indices,
+                        max_workers=self.workers,
+                        desc="This Batch",
+                    )
+                else:
+                    results = thread_map(
+                        process_func,
+                        range(self.current_index, self.current_index + self.batch_size),
+                        max_workers=self.workers,
+                        desc="This Batch",
+                    )
             except Exception as e:
                 log.error(f"Stopped at index: {self.current_index}")
                 raise e
