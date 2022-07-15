@@ -42,9 +42,14 @@ You can delete this entire "Setting up the Repo" section once done!
 ## Quickstart
 
 ```python
-from swagit_dataset_generator import example
+from swagit_dataset_generator import SwagitScraper
+import dask.dataframe as dd
 
-print(example.str_len("hello"))  # prints 5
+scraper = SwagitScraper(start_index=10000, end_index=10100, batch_size=10)
+chunk_dir = scraper.run()
+
+results_df = dd.read_parquet(f"{chunk_dir}/*")
+print(results_df.meeting_body.unique().compute())
 ```
 
 ## Documentation
