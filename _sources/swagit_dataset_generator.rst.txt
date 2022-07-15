@@ -1,6 +1,14 @@
 swagit\_dataset\_generator package
 ==================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   swagit_dataset_generator.bin
+
 Submodules
 ----------
 

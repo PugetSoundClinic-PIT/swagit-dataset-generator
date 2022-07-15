@@ -1,0 +1,21 @@
+swagit\_dataset\_generator.bin package
+======================================
+
+Submodules
+----------
+
+swagit\_dataset\_generator.bin.swagit\_sampled module
+-----------------------------------------------------
+
+.. automodule:: swagit_dataset_generator.bin.swagit_sampled
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: swagit_dataset_generator.bin
+   :members:
+   :undoc-members:
+   :show-inheritance:
