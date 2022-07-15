@@ -19,10 +19,10 @@ from swagit_dataset_generator import SwagitScraper
 import dask.dataframe as dd
 
 scraper = SwagitScraper(start_index=10000, end_index=10100, batch_size=10)
-chunk_dir = scraper.run()
+chunks_dir = scraper.run()
 
-results_df = dd.read_parquet(f"{chunk_dir}/*")
-print(results_df.meeting_body.unique().compute())
+results_df = dd.read_parquet(f"{chunks_dir}/*")
+print(results_df.meeting_body.value_counts().compute())
 ```
 
 ## Documentation

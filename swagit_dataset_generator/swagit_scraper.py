@@ -67,6 +67,7 @@ class SwagitScraper:
         storage_dir: Union[str, Path] = DEFAULT_STORAGE_DIR,
         workers: Optional[int] = None,
         max_trials_per_page: int = 3,
+        time_between_batches: int = 100,
     ) -> None:
         # Store params
         self.start_index = start_index
@@ -75,6 +76,7 @@ class SwagitScraper:
         self.storage_dir = Path(storage_dir)
         self.workers = workers
         self.max_trials_per_page = max_trials_per_page
+        self.time_between_batches = time_between_batches
 
         # Store general state
         self.current_index = start_index
@@ -90,22 +92,25 @@ class SwagitScraper:
     ) -> Optional[SwagitPageParse]:
         # Get the page
         url = SwagitScraper.BASE_URI_PATTERN.format(index=index)
-        log.debug(f"Fast checking: '{url}'")
+        log.debug(f"Requesting: '{url}'")
         response = requests.get(url)
 
         # Check status and backoff retry
         try:
             response.raise_for_status()
-        except requests.exceptions.HTTPError as e:
+        except requests.exceptions.HTTPError:
             if trial < max_trials:
-                sleep(4**trial)
+                sleep_seconds = 8**trial
+                log.debug(f"Retrying '{url}' in {sleep_seconds} seconds...")
+                sleep(sleep_seconds)
                 return SwagitScraper._process_page(
                     index=index,
                     trial=trial + 1,
                     max_trials=max_trials,
                 )
             else:
-                raise e
+                log.debug(f"Failed to parse '{url}' after multiple attempts, skipping.")
+                return None
 
         # Parse title
         soup = BeautifulSoup(response.text, "html.parser")
@@ -113,6 +118,7 @@ class SwagitScraper:
 
         # Check content
         if match_or_none is None:
+            log.debug(f"Could not match title from '{url}', skipping.")
             return None
 
         # Construct datetime
@@ -154,7 +160,15 @@ class SwagitScraper:
             # Filter nones
             results = [r.to_dict() for r in results if r is not None]
             results_df = pd.DataFrame(results)
-            results_df.to_parquet(self.storage_dir / f"{self.current_index}.parquet")
+            result_store_path = self.storage_dir / f"{self.current_index}.parquet"
+            results_df.to_parquet(result_store_path)
+            log.debug(f"Stored chunk to: '{result_store_path}'")
             self.current_index += self.batch_size
+
+            # Wait
+            log.debug(
+                f"Sleeping for {self.time_between_batches} seconds before next batch..."
+            )
+            sleep(self.time_between_batches)
 
         return self.storage_dir
