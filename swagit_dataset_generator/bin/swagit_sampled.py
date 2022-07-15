@@ -69,6 +69,7 @@ def main() -> None:
     # Process
     try:
         # Generate indices
+        np.random.seed(12)
         possible = np.arange(args.low, args.high)
         sample_size = int(args.sample * (args.high - args.low))
         sampled = np.random.choice(possible, size=sample_size, replace=False).tolist()
