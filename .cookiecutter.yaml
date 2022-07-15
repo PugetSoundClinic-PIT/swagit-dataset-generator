@@ -1,7 +1,7 @@
 default_context:
     name: "Eva Maxfield Brown"
     email: "evamaxfieldbrown@gmail.com"
-    github_username: "evamaxfield"
+    github_username: "PugetSoundClinic-PIT"
     project_name: "Swagit Dataset Generator"
     project_slug: "swagit-dataset-generator"
     python_slug: "swagit_dataset_generator"

@@ -1,7 +1,7 @@
 # swagit-dataset-generator
 
-[![Build Status](https://github.com/evamaxfield/swagit-dataset-generator/workflows/Build/badge.svg)](https://github.com/evamaxfield/swagit-dataset-generator/actions)
-[![Documentation](https://github.com/evamaxfield/swagit-dataset-generator/workflows/Documentation/badge.svg)](https://swagit-dataset-generator.github.io/swagit-dataset-generator)
+[![Build Status](https://github.com/PugetSoundClinic-PIT/swagit-dataset-generator/workflows/Build/badge.svg)](https://github.com/PugetSoundClinic-PIT/swagit-dataset-generator/actions)
+[![Documentation](https://github.com/PugetSoundClinic-PIT/swagit-dataset-generator/workflows/Documentation/badge.svg)](https://PugetSoundClinic-PIT.github.io/swagit-dataset-generator)
 
 A small package to generate a dataset of municipal council meeting metadata from Swagit.
 
@@ -10,7 +10,7 @@ A small package to generate a dataset of municipal council meeting metadata from
 ## Installation
 
 **Stable Release:** `pip install swagit-dataset-generator`<br>
-**Development Head:** `pip install git+https://github.com/evamaxfield/swagit-dataset-generator.git`
+**Development Head:** `pip install git+https://github.com/PugetSoundClinic-PIT/swagit-dataset-generator.git`
 
 ## Quickstart
 
@@ -27,7 +27,7 @@ print(results_df.meeting_body.value_counts().compute())
 
 ## Documentation
 
-For full package documentation please visit [evamaxfield.github.io/swagit-dataset-generator](https://evamaxfield.github.io/swagit-dataset-generator).
+For full package documentation please visit [PugetSoundClinic-PIT.github.io/swagit-dataset-generator](https://PugetSoundClinic-PIT.github.io/swagit-dataset-generator).
 
 ## Development
 

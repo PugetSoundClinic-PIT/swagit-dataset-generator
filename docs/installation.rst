@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/evamaxfield/swagit-dataset-generator
+    $ git clone git://github.com/PugetSoundClinic-PIT/swagit-dataset-generator
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/evamaxfield/swagit-dataset-generator/tarball/main
+    $ curl  -OL https://github.com/PugetSoundClinic-PIT/swagit-dataset-generator/tarball/main
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/evamaxfield/swagit-dataset-generator
-.. _tarball: https://github.com/evamaxfield/swagit-dataset-generator/tarball/main
+.. _Github repo: https://github.com/PugetSoundClinic-PIT/swagit-dataset-generator
+.. _tarball: https://github.com/PugetSoundClinic-PIT/swagit-dataset-generator/tarball/main
