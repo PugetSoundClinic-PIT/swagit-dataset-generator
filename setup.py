@@ -55,7 +55,10 @@ dev_requirements = [
 
 requirements = [
     "beautifulsoup4~=4.11",
+    "dask>=2022.7.0",
     "dataclasses_json~=0.5",
+    "pandas~=1.4",
+    "pyarrow~=8.0",
     "requests~=2.28",
     "tqdm~=4.64",
 ]

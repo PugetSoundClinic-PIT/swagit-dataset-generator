@@ -3,16 +3,20 @@
 
 
 import logging
+import math
 import re
 from dataclasses import dataclass
 from datetime import datetime
+from functools import partial
 from pathlib import Path
 from time import sleep
 from typing import Optional, Union
 
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from dataclasses_json import DataClassJsonMixin
+from tqdm import tqdm
 from tqdm.contrib.concurrent import thread_map
 
 ###############################################################################
@@ -37,7 +41,6 @@ class SwagitScraper:
 
     BASE_URI_PATTERN = "https://houstontx.new.swagit.com/videos/{index}"
     DEFAULT_STORAGE_DIR = Path("swagit-dataset-chunks")
-    INDEX_FILENAME = "current_index.txt"
 
     # Match pattern of
     # Any character one to unlimited times
@@ -58,21 +61,26 @@ class SwagitScraper:
 
     def __init__(
         self,
-        start_index: int,
+        start_index: int = 0,
         end_index: int = 200_000,
         batch_size: int = 100,
         storage_dir: Union[str, Path] = DEFAULT_STORAGE_DIR,
         workers: Optional[int] = None,
+        max_trials_per_page: int = 3,
     ) -> None:
         # Store params
         self.start_index = start_index
         self.end_index = end_index
         self.batch_size = batch_size
-        self.storage_dir = storage_dir
+        self.storage_dir = Path(storage_dir)
         self.workers = workers
+        self.max_trials_per_page = max_trials_per_page
 
         # Store general state
         self.current_index = start_index
+
+        # Create storage dir
+        self.storage_dir.mkdir(exist_ok=True, parents=True)
 
     @staticmethod
     def _process_page(
@@ -97,7 +105,6 @@ class SwagitScraper:
                     max_trials=max_trials,
                 )
             else:
-                # Open log file and store current index
                 raise e
 
         # Parse title
@@ -123,14 +130,31 @@ class SwagitScraper:
             meeting_datetime=dt,
         )
 
-    def run(self) -> None:
+    def run(self) -> Path:
         # Determine number of batches
+        total_n = self.end_index - self.start_index
+        batches = math.ceil(total_n / self.batch_size)
 
         # Run batches
+        process_func = partial(
+            self._process_page,
+            max_trials=self.max_trials_per_page,
+        )
+        for _ in tqdm(range(batches), "Batches"):
+            try:
+                results = thread_map(
+                    process_func,
+                    range(self.current_index, self.current_index + self.batch_size),
+                    desc="This Batch",
+                )
+            except Exception as e:
+                log.error(f"Stopped at index: {self.current_index}")
+                raise e
 
-        # Run pages
+            # Filter nones
+            results = [r.to_dict() for r in results if r is not None]
+            results_df = pd.DataFrame(results)
+            results_df.to_parquet(self.storage_dir / f"{self.current_index}.parquet")
+            self.current_index += self.batch_size
 
-        # Store batch
-
-        # Update log file
-        pass
+        return self.storage_dir

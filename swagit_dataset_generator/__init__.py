@@ -11,3 +11,6 @@ __version__ = "0.0.0"
 
 def get_module_version() -> str:
     return __version__
+
+
+from .swagit_scraper import SwagitScraper  # noqa: F401
