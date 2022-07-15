@@ -364,7 +364,9 @@
                 <span class="k">if</span> <span class="n">indices</span><span class="p">:</span>
                     <span class="n">results</span> <span class="o">=</span> <span class="n">thread_map</span><span class="p">(</span>
                         <span class="n">process_func</span><span class="p">,</span>
-                        <span class="n">indices</span><span class="p">,</span>
+                        <span class="n">indices</span><span class="p">[</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+                        <span class="p">],</span>
                         <span class="n">max_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">,</span>
                         <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;This Batch&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
