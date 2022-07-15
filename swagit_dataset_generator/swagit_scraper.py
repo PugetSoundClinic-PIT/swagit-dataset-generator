@@ -123,12 +123,16 @@ class SwagitScraper:
             return None
 
         # Construct datetime
-        month = match_or_none.group(1)
-        day = match_or_none.group(3)
-        year = match_or_none.group(5)
-        body = match_or_none.group(7)
-        municipality = match_or_none.group(9)
-        dt = datetime.strptime(f"{month} {day} {year}", "%b %d %Y")
+        try:
+            month = match_or_none.group(1)
+            day = match_or_none.group(3)
+            year = match_or_none.group(5)
+            body = match_or_none.group(7)
+            municipality = match_or_none.group(9)
+            dt = datetime.strptime(f"{month} {day} {year}", "%b %d %Y")
+        except Exception:
+            log.debug(f"Could not parse title: '{soup.title.string}'")
+            return None
 
         # Wait to limit ourselves
         sleep(time_per_request)
